@@ -13,7 +13,7 @@ class SoundAPI(MethodView):
             category = os.path.basename(sound_dir[:-1])
             sound_glob = sound_dir + "*.wav"
             soundfile_list = list(glob.glob(sound_glob))
-            sorted(soundfile_list)
+            random.shuffle(soundfile_list)
 
             first_filename_with_ext = os.path.basename(soundfile_list[0])
             first_name = os.path.splitext(first_filename_with_ext)[0]
