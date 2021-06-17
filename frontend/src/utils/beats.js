@@ -38,8 +38,8 @@ export function stopBeat() {
 export function testBeat() {
   window.leftEar.set("frequency", 450);
   window.rightEar.set("frequency", 450);
-  window.leftEar.set("volume", -50);
-  window.rightEar.set("volume", -50);
+  window.leftEar.set("volume", -45);
+  window.rightEar.set("volume", -45);
   console.info("# DEBUG: Tone.js - test beat was set.");
 }
 

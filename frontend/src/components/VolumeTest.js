@@ -62,9 +62,9 @@ export default function VolumeTest({
             type="range"
             id="volume"
             name="volume"
-            min="-70"
-            max="-50"
-            step="0.05"
+            min="-60"
+            max="-45"
+            step="0.01"
             value={currVolume}
             onChange={(event) => {
               setCurrVolume(event.target.value);
