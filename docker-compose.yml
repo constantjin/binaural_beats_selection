@@ -1,0 +1,32 @@
+version: "3"
+
+services:
+  nginx:
+    image: nginx:1.20-alpine
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./docker/nginx:/etc/nginx/conf.d
+      - ./sounds:/app/sounds
+    depends_on:
+      - web
+      - node
+  web:
+    build:
+      context: .
+      dockerfile: ./docker/web/Dockerfile
+    volumes:
+      - ./backend:/app/backend
+      - ./sounds:/app/sounds
+    expose:
+      - 8000
+    env_file:
+      - ./docker/.env
+  node:
+    build:
+      context: .
+      dockerfile: ./docker/node/Dockerfile
+    expose:
+      - 5000
+    env_file:
+      - ./docker/.env

@@ -1,0 +1,5 @@
+sounds/**/*.wav
+sounds/*.wav
+!sounds/*.gitkeep
+docker/.env
+!docker/.env.example
