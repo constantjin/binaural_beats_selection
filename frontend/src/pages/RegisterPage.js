@@ -8,7 +8,8 @@ import { asyncFetchSoundUrls } from "../utils/api";
 
 export default function RegisterPage() {
   const [soundLoaded, setSoundLoaded] = useState(false);
-  const [subjectVolume, setSubjectVolume] = useState(0);
+  const [beatVolume, setBeatVolume] = useState(0);
+  const [iadsVolume, setIADSVolume] = useState(0);
   const [volumeTestFinished, setVolumeTestFinished] = useState(false);
 
   useEffect(() => {
@@ -27,11 +28,12 @@ export default function RegisterPage() {
         (!volumeTestFinished ? (
           <VolumeTest
             setVolumeTestFinished={setVolumeTestFinished}
-            setSubjectVolume={setSubjectVolume}
+            setIADSVolume={setIADSVolume}
+            setBeatVolume={setBeatVolume}
           />
         ) : (
           <div>
-            <RegisterForm subjectVolume={subjectVolume} />
+            <RegisterForm beatVolume={beatVolume} iadsVolume={iadsVolume} />
           </div>
         ))}
     </div>

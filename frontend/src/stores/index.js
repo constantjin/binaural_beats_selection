@@ -43,7 +43,9 @@ export const useSubjectStore = create(() => ({
   subjectId: null,
   currSound: null,
   soundList: [],
-  dummy_url: "",
+  CAR_dummy: "",
+  IADS_dummy: "",
+  IADS_volume: 0.5,
 }));
 
 export const getSubjectStore = () => {
@@ -51,10 +53,11 @@ export const getSubjectStore = () => {
 };
 
 export const initSounds = (data) => {
-  const { dummy, sounds } = data;
+  const { CAR_dummy, IADS_dummy, sounds } = data;
   useSubjectStore.setState((state) => ({
     ...state,
-    dummy_url: dummy,
+    CAR_dummy: CAR_dummy,
+    IADS_dummy: IADS_dummy,
     soundList: sounds,
   }));
 };
@@ -76,4 +79,8 @@ export const setCurrSound = () => {
     soundList: currSoundList,
   }));
   return sound; // For debugging
+};
+
+export const setSubjectIADSVolume = (vol) => {
+  useSubjectStore.setState((state) => ({ ...state, IADS_volume: vol }));
 };

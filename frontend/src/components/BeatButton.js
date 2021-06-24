@@ -1,13 +1,5 @@
 import React, { useState } from "react";
-import {
-  initBeat,
-  playBeat,
-  stopBeat,
-  justStopCarSound,
-  checkCarSoundPlaying,
-  getSoundDurationInMs,
-  playSound,
-} from "../utils/beats";
+import { initBeat, playBeat, stopBeat } from "../utils/beats";
 import {
   useBeatStore,
   setPlayingState,
@@ -20,12 +12,14 @@ function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-export default function BeatButton({ hertz, freq }) {
+export default function BeatButton({ hertz, freq, totalNumBeats }) {
   const [listened, setListened] = useState(false);
   const [thisChecked, setThisChecked] = useState(false);
-  const [thisPlaying, setThisPlaying] = useState(false);
+  const [buttonText, setButtonText] = useState("🔈");
+  const [clicked, setClicked] = useState("false");
   const globalIsPlaying = useBeatStore((state) => state.isPlaying);
   const globalChecked = useBeatStore((state) => state.checked);
+  const globalNumListened = useBeatStore((state) => state.num_listened);
 
   const handleCheckbox = (event) => {
     if (event.target.checked) {
@@ -57,31 +51,33 @@ export default function BeatButton({ hertz, freq }) {
         className="h-10 px-3 border-2 rounded-lg focus:outline-none"
         onClick={async (e) => {
           e.preventDefault();
-          if (!globalIsPlaying) {
-            if (checkCarSoundPlaying()) {
-              justStopCarSound();
-              stopBeat();
-              await sleep(200);
-            }
+          setClicked(true);
+          if (!globalIsPlaying || globalNumListened === totalNumBeats) {
+            stopBeat();
+            await sleep(150);
             initBeat(hertz, freq);
             setPlayingState(true);
-            setThisPlaying(true);
+            setButtonText("🎵");
             playBeat();
-            let duration = getSoundDurationInMs();
-            playSound();
-            await sleep(duration);
             if (!listened) {
+              await sleep(5000);
               setListened(true);
               markListened();
+              setButtonText("✔️");
+            } else {
+              await sleep(100);
             }
             setPlayingState(false);
-            setThisPlaying(false);
           } else {
+            setButtonText("❌");
+            await sleep(100);
+            setButtonText(listened ? "✔️" : "🔈");
             console.log("One beat is currently playing!");
           }
+          setClicked(false);
         }}
       >
-        <span>{thisPlaying ? "🎵" : listened ? "✔️" : "🔈"}</span>
+        <span>{clicked ? buttonText : listened ? "✔️" : "🔈"}</span>
       </button>
       <input
         type="checkbox"

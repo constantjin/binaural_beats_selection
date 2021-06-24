@@ -1,24 +1,20 @@
 import React, { useState } from "react";
 import Button from "./Button";
-import {
-  testBeat,
-  playBeat,
-  stopBeat,
-  setVolume,
-  asyncLoadCategorySound,
-  playSound,
-  stopAndUnloadCarSound,
-} from "../utils/beats";
+import IADSVolumeTest from "./IADSVolumeTest";
+import BeatVolumeTest from "./BeatVolumeTest";
+import { asyncLoadDummySounds } from "../utils/beats";
 
 import { useSubjectStore } from "../stores";
 
 export default function VolumeTest({
-  setSubjectVolume,
+  setBeatVolume,
+  setIADSVolume,
   setVolumeTestFinished,
 }) {
   const [started, setStarted] = useState(false);
-  const [currVolume, setCurrVolume] = useState(-30);
-  const car_dummy = useSubjectStore((state) => state.dummy_url);
+  const [iadsVolumeTestFinished, setIADSVolumeTestFinished] = useState(false);
+  const car_dummy = useSubjectStore((state) => state.CAR_dummy);
+  const iads_dummy = useSubjectStore((state) => state.IADS_dummy);
 
   return (
     <div>
@@ -35,54 +31,21 @@ export default function VolumeTest({
           <Button
             text="시작"
             onClick={async () => {
-              await asyncLoadCategorySound(car_dummy, "CAR", true);
-              testBeat();
-              playBeat();
-              playSound();
+              await asyncLoadDummySounds(car_dummy, iads_dummy);
               setStarted(true);
             }}
           />
         </div>
+      ) : iadsVolumeTestFinished ? (
+        <BeatVolumeTest
+          setBeatVolume={setBeatVolume}
+          setVolumeTestFinished={setVolumeTestFinished}
+        />
       ) : (
-        <div>
-          <p>
-            현재 <b>자동차 소리</b>와 함께 <br />
-            삐- 소리의 <b>기계음</b>이 재생중입니다.
-            <br />
-            <br />
-            <b>기계음</b>의 크기를 집중해야만 들을 수 있을 정도로
-            <br />
-            <b>작게</b> 조절하신 후 아래 버튼을 클릭해 주세요
-          </p>
-          <hr className="border-1 w-full my-4" />
-          <label htmlFor="volume" className="mr-5">
-            🔈 기계음 볼륨
-          </label>
-          <input
-            type="range"
-            id="volume"
-            name="volume"
-            min="-60"
-            max="-45"
-            step="0.01"
-            value={currVolume}
-            onChange={(event) => {
-              setCurrVolume(event.target.value);
-              setVolume(currVolume);
-            }}
-            className="block w-full h-3 mt-3"
-          />
-          <br />
-          <Button
-            text="다음 단계로"
-            onClick={() => {
-              stopBeat();
-              stopAndUnloadCarSound();
-              setSubjectVolume(currVolume);
-              setVolumeTestFinished(true);
-            }}
-          />
-        </div>
+        <IADSVolumeTest
+          setIADSVolume={setIADSVolume}
+          setIADSVolumeTestFinished={setIADSVolumeTestFinished}
+        />
       )}
     </div>
   );

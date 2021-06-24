@@ -14,7 +14,7 @@ export default function PreInstruction() {
       if (!selectedCarSound) {
         history.push("/end");
       } else {
-        await sleep(3000);
+        await sleep(5000);
         history.push("/pre_sound");
       }
     };
@@ -24,7 +24,7 @@ export default function PreInstruction() {
 
   return (
     <div>
-      <p className="text-xl">조금 뒤 실험이 시작됩니다</p>
+      <p className="text-xl">조금 뒤 소리 자극이 제시됩니다</p>
       <hr className="border-1 w-full my-4" />
       <ul className="text-left space-y-3">
         <li>

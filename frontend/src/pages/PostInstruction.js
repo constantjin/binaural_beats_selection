@@ -9,7 +9,7 @@ export default function PostInstruction() {
   let history = useHistory();
   useEffect(() => {
     const asyncInitRun = async () => {
-      await sleep(3000);
+      await sleep(5000);
       history.push("/post_sound");
     };
 
@@ -18,14 +18,18 @@ export default function PostInstruction() {
 
   return (
     <div>
-      <p className="text-xl">조금 뒤 실험이 시작됩니다</p>
+      <p className="text-xl">조금 뒤 소리 자극이 제시됩니다</p>
       <hr className="border-1 w-full my-4" />
       <ul className="text-left space-y-3">
         <li>
           <span>🔈</span> 이어폰으로 들리는 소리에 <b>집중</b>해 주세요
         </li>
         <li>
-          <span>✔️</span> 응답은 <b>빠르고 정확하게</b> 해 주세요
+          <span>✔️</span> 기계음 <b className="text-red-400">이후 </b>
+          <b>소리</b>가 재생됩니다.
+        </li>
+        <li>
+          <span>✔️</span> 소리 자극에 <b>응답</b>해주세요.
         </li>
         <li>
           <span>⏱️</span> <b>20초</b>간 미응답시 자동으로 넘어갑니다

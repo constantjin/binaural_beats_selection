@@ -158,5 +158,8 @@ Thumbs.db
 # Sqlite DB
 *.sqlite3
 
+# sounds
+sounds/
+
 
 # End of https://www.toptal.com/developers/gitignore/api/flask

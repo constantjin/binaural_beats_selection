@@ -35,5 +35,9 @@ def create_app(config_name):
     # Blueprints
     from api.blueprints.v1 import api_blueprint
     app.register_blueprint(api_blueprint, url_prefix="/api")
+
+    # @app.route("/sounds/<path:path>", methods=["GET"])
+    # def get_sound(path):
+    #     return send_from_directory(app.config["SOUND_DIR"], path)
     
     return app

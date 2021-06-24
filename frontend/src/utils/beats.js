@@ -1,5 +1,6 @@
 import * as Tone from "tone";
 import { Howl } from "howler";
+import { getSubjectStore } from "../stores";
 
 export function initTone() {
   window.mergedChannel = new Tone.Merge().toMaster();
@@ -38,8 +39,8 @@ export function stopBeat() {
 export function testBeat() {
   window.leftEar.set("frequency", 450);
   window.rightEar.set("frequency", 450);
-  window.leftEar.set("volume", -45);
-  window.rightEar.set("volume", -45);
+  window.leftEar.set("volume", -35);
+  window.rightEar.set("volume", -35);
   console.info("# DEBUG: Tone.js - test beat was set.");
 }
 
@@ -52,7 +53,7 @@ export function setVolume(vol) {
 
 export function asyncLoadCarSound(sound_path) {
   return new Promise((resolve, reject) => {
-    if (window.player) {
+    if (window.howlPlayer) {
       console.error(
         "# Error: Howler.js - window.howlPlayer should be cleared after each load!"
       );
@@ -75,9 +76,13 @@ export function asyncLoadCarSound(sound_path) {
 }
 
 export function asyncLoadCategorySound(sound_path, category, loop = false) {
-  const category_volume = category.startsWith("IADS") ? 0.5 : 1.0;
+  const category_volume = category.startsWith("IADS")
+    ? getSubjectStore().IADS_volume
+    : 1.0;
+  console.info(`# DEBUG: Howler.js - volume is set to ${category_volume}.`);
+
   return new Promise((resolve, reject) => {
-    if (window.player) {
+    if (window.howlPlayer) {
       console.error(
         "# Error: Howler.js - window.howlPlayer should be cleared after each load!"
       );
@@ -186,5 +191,130 @@ export function checkCarSoundPlaying() {
     return false;
   } else {
     return window.howlPlayer.playing();
+  }
+}
+
+// Additional Howler.js utility functions
+function _loadDummySoundToHowl(sound_path, category) {
+  return new Promise((resolve, reject) => {
+    if (category === "CAR") {
+      window.carDummyHowl = new Howl({
+        src: [sound_path],
+        preload: true,
+        html5: true,
+        volume: 1.0,
+        loop: true,
+        onload: () => {
+          console.info(
+            `# DEBUG: Howler.js - a dummy CAR sound (${sound_path}) was loaded.`
+          );
+          resolve();
+        },
+      });
+    } else if (category === "IADS") {
+      window.iadsDummyHowl = new Howl({
+        src: [sound_path],
+        preload: true,
+        html5: true,
+        volume: 1.0,
+        loop: true,
+        onload: () => {
+          console.info(
+            `# DEBUG: Howler.js - a dummy IADS sound (${sound_path}) was loaded.`
+          );
+          resolve();
+        },
+      });
+    }
+  });
+}
+
+export async function asyncLoadDummySounds(car_dummy, iads_dummy) {
+  await _loadDummySoundToHowl(car_dummy, "CAR");
+  await _loadDummySoundToHowl(iads_dummy, "IADS");
+}
+
+export function playCarDummySound() {
+  if (!window.carDummyHowl) {
+    console.error(
+      "# Error: Howler.js - window.carDummyHowl should be initialized!"
+    );
+  } else if (window.carDummyHowl.state() !== "loaded") {
+    console.error("# Error: Howler.js - the sound should be loaded!");
+  } else {
+    console.info(`# DEBUG: Howler.js - a dummy CAR sound is playing.`);
+    window.carDummyHowl.play();
+  }
+}
+
+export function playIADSDummySound() {
+  if (!window.iadsDummyHowl) {
+    console.error(
+      "# Error: Howler.js - window.iadsDummyHowl should be initialized!"
+    );
+  } else if (window.iadsDummyHowl.state() !== "loaded") {
+    console.error("# Error: Howler.js - the sound should be loaded!");
+  } else {
+    console.info(`# DEBUG: Howler.js - a dummy IADS sound is playing.`);
+    window.iadsDummyHowl.play();
+  }
+}
+
+export function stopCarDummySound() {
+  if (!window.carDummyHowl) {
+    console.error(
+      "# Error: Howler.js - window.carDummyHowl should be initialized!"
+    );
+  } else if (window.carDummyHowl.state() !== "loaded") {
+    console.error("# Error: Howler.js - the sound should be loaded!");
+  } else {
+    if (window.carDummyHowl.playing()) {
+      console.info(`# DEBUG: Howler.js - a dummy CAR sound was stopped.`);
+      window.carDummyHowl.stop();
+    }
+  }
+}
+
+export function stopIADSDummySound() {
+  if (!window.iadsDummyHowl) {
+    console.error(
+      "# Error: Howler.js - window.iadsDummyHowl should be initialized!"
+    );
+  } else if (window.iadsDummyHowl.state() !== "loaded") {
+    console.error("# Error: Howler.js - the sound should be loaded!");
+  } else {
+    if (window.iadsDummyHowl.playing()) {
+      console.info(`# DEBUG: Howler.js - a dummy IADS sound was stopped.`);
+      window.iadsDummyHowl.stop();
+    }
+  }
+}
+
+export function setIADSDummySoundVolume(vol) {
+  if (!window.iadsDummyHowl) {
+    console.error(
+      "# Error: Howler.js - window.iadsDummyHowl should be initialized!"
+    );
+  } else if (window.iadsDummyHowl.state() !== "loaded") {
+    console.error("# Error: Howler.js - the sound should be loaded!");
+  } else {
+    window.iadsDummyHowl.volume(vol);
+  }
+}
+
+export function stopAndUnloadDummySounds() {
+  if (window.carDummyHowl && window.iadsDummyHowl) {
+    if (window.carDummyHowl.playing()) {
+      window.carDummyHowl.stop();
+    }
+    if (window.iadsDummyHowl.playing()) {
+      window.iadsDummyHowl.stop();
+    }
+    console.info(`# DEBUG: Howler.js - all dummy sounds were stopped.`);
+    window.carDummyHowl.unload();
+    window.carDummyHowl = null;
+    window.iadsDummyHowl.unload();
+    window.iadsDummyHowl = null;
+    console.info(`# DEBUG: Howler.js - all dummy sounds were unloaded.`);
   }
 }

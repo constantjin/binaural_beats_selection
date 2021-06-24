@@ -7,6 +7,7 @@ import {
   stopBeat,
   stopAndUnloadCarSound,
   asyncLoadCategorySound,
+  playSound,
 } from "../utils/beats";
 import { asyncSaveBeat } from "../utils/api";
 
@@ -65,6 +66,7 @@ export default function BeatsSelector() {
       setPairsLength(hertz_freq_pairs.length);
       initBeatStore();
       await asyncLoadCategorySound(carSoundURL, category, true);
+      playSound();
     };
 
     asyncInit();
@@ -74,19 +76,35 @@ export default function BeatsSelector() {
     <div>
       <div className="grid grid-cols-1 gap-y-2 divide-y-2">
         <p>
-          아래 스피커 버튼(🔈)을 눌러서 소리를 듣고 <br />
-          가장 <b>긍정적인</b> 감정상태를 불러일으킨 소리에 체크해 주세요.
+          현재 감정 소리 자극이 재생 중입니다. <br />
+          아래 버튼(🔈)을 눌러서 비트를 듣고 가장 <b>긍정적인</b>
+          <br />
+          감정상태를 불러일으킨 비트에 체크해 주세요.
         </p>
-        <p>청취한 소리 (✔️ 표시) 중 한 가지 소리만 선택 가능합니다.</p>
+        <p>
+          1. 청취한 소리 (✔️ 표시) 중 한 가지 소리만 선택 가능합니다. <br />
+          2. 체크를 해체하면 다시 소리를 선택할 수 있습니다.
+          <br />
+          3. 모든 소리를 들은 후 자유롭게 비트를 전환할 수 있습니다.
+        </p>
       </div>
       <br />
-      <div className="grid grid-cols-4 gap-4">
-        {pairs.map((pair) => {
-          let [h, f] = pair;
-          let k = `${h}_${f}`;
-          return <BeatButton hertz={h} freq={f} key={k} />;
-        })}
-      </div>
+      {pairsLength > 0 && (
+        <div className="grid grid-cols-4 gap-4">
+          {pairs.map((pair) => {
+            let [h, f] = pair;
+            let k = `${h}_${f}`;
+            return (
+              <BeatButton
+                hertz={h}
+                freq={f}
+                key={k}
+                totalNumBeats={pairsLength}
+              />
+            );
+          })}
+        </div>
+      )}
       <br />
       <Button text="다음으로" onClick={handleNext} />
       <span className="block font-medium tracking-wide text-red-500 text-base mt-1 text-center mb-3">

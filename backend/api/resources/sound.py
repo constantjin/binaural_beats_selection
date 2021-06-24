@@ -27,6 +27,7 @@ class SoundAPI(MethodView):
         
         data = list(map(prepare_path, sound_dir_list))
         random.shuffle(data)
-        dummy_url = current_app.config["SOUND_URL"] + "dummy.wav"
+        car_dummy_url = current_app.config["SOUND_URL"] + "CAR_dummy.wav"
+        iads_dummy_url = current_app.config["SOUND_URL"] + "IADS_dummy.wav"
 
-        return {"status": "success", "data": {"dummy": dummy_url, "sounds": data}}, 200
+        return {"status": "success", "data": {"CAR_dummy": car_dummy_url,  "IADS_dummy": iads_dummy_url, "sounds": data}}, 200

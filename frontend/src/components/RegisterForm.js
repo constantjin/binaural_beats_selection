@@ -10,7 +10,8 @@ export default function RegisterForm(props) {
   const [name, setName] = useState("");
   const [isLoading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const volume = props.subjectVolume;
+  const volume = props.beatVolume;
+  const IADS_volume = props.idasVolume;
   const history = useHistory();
 
   const checkInt = (str) => {
@@ -83,6 +84,7 @@ export default function RegisterForm(props) {
                 subject_number,
                 name,
                 volume,
+                IADS_volume,
               });
               setError("");
               setSubjectId(subjectId);
