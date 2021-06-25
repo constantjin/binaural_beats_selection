@@ -54,7 +54,7 @@ export default function BeatButton({ hertz, freq, totalNumBeats }) {
           setClicked(true);
           if (!globalIsPlaying || globalNumListened === totalNumBeats) {
             stopBeat();
-            await sleep(150);
+            await sleep(300);
             initBeat(hertz, freq);
             setPlayingState(true);
             setButtonText("🎵");

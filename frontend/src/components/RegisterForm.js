@@ -11,7 +11,7 @@ export default function RegisterForm(props) {
   const [isLoading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const volume = props.beatVolume;
-  const IADS_volume = props.idasVolume;
+  const IADS_volume = props.iadsVolume;
   const history = useHistory();
 
   const checkInt = (str) => {
